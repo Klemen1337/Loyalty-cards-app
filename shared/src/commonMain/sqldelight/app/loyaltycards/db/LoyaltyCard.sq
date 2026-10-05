@@ -1,0 +1,50 @@
+CREATE TABLE loyalty_card (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    card_number TEXT NOT NULL,
+    -- Barcode symbology name, see app.loyaltycards.domain.BarcodeFormat.
+    barcode_format TEXT NOT NULL,
+    -- Brand color as ARGB.
+    color INTEGER NOT NULL,
+    -- Sort order in the card list, ascending.
+    position INTEGER NOT NULL,
+    created_at INTEGER NOT NULL
+);
+
+CREATE INDEX loyalty_card_position ON loyalty_card(position);
+
+-- Sample cards, inserted only when the database is first created.
+INSERT INTO loyalty_card (name, card_number, barcode_format, color, position, created_at) VALUES
+    ('IKEA', '6275980123456789', 'CODE_128', 4278212771, 0, 0),
+    ('Spar', '2900000123458', 'EAN_13', 4278223933, 1, 0),
+    ('Mercator', '2800000456788', 'EAN_13', 4293068307, 2, 0),
+    ('Merkur', '7701234567', 'CODE_128', 4280107658, 3, 0);
+
+selectAll:
+SELECT *
+FROM loyalty_card
+ORDER BY position ASC, id ASC;
+
+nextPosition:
+SELECT COALESCE(MAX(position) + 1, 0) AS next
+FROM loyalty_card;
+
+insert:
+INSERT INTO loyalty_card (name, card_number, barcode_format, color, position, created_at)
+VALUES (?, ?, ?, ?, ?, ?);
+
+restore:
+INSERT OR REPLACE INTO loyalty_card (id, name, card_number, barcode_format, color, position, created_at)
+VALUES ?;
+
+updatePosition:
+UPDATE loyalty_card
+SET position = :position
+WHERE id = :id;
+
+deleteById:
+DELETE FROM loyalty_card
+WHERE id = :id;
+
+lastInsertedId:
+SELECT last_insert_rowid();
