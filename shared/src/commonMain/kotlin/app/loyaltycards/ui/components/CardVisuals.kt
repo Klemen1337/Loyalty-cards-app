@@ -2,6 +2,7 @@ package app.loyaltycards.ui.components
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.painter.ColorPainter
@@ -71,6 +73,8 @@ internal fun WalletCard(
     expanded: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    /** Called when the barcode panel of an expanded card is tapped. */
+    onBarcodeClick: () -> Unit = {},
 ) {
     val height by animateDpAsState(
         if (expanded) WalletCardDefaults.ExpandedHeight else WalletCardDefaults.FullHeight,
@@ -91,7 +95,9 @@ internal fun WalletCard(
             }
             BarcodePanel(
                 card = card,
-                caption = "Tap card to enlarge",
+                caption = "Tap barcode to enlarge",
+                // A collapsed card still lays out its (hidden) panel, so only an expanded one reacts.
+                onClick = if (expanded) onBarcodeClick else null,
                 modifier = Modifier.height(WalletCardDefaults.BarcodePanelHeight),
             )
         }
@@ -164,9 +170,17 @@ private fun LabeledValue(label: String, value: String, alignEnd: Boolean, modifi
 
 /** White panel with the card's barcode, as shown on an expanded card. */
 @Composable
-internal fun BarcodePanel(card: LoyaltyCard, caption: String?, modifier: Modifier = Modifier) {
+internal fun BarcodePanel(
+    card: LoyaltyCard,
+    caption: String?,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .then(if (onClick != null) Modifier.clickable(onClickLabel = "Enlarge barcode", onClick = onClick) else Modifier),
         shape = RoundedCornerShape(16.dp),
         color = Color.White,
         contentColor = Color(0xFF16171A),

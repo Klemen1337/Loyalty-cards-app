@@ -128,9 +128,9 @@ internal fun WalletContent(
                 else -> CardStack(
                     cards = visibleCards,
                     selectedId = selectedId,
-                    onCardClick = { card ->
-                        if (card.id == selectedId) enlargedId = card.id else selectedId = card.id
-                    },
+                    // Tapping the pulled-out card again puts it back; only its barcode opens the big view.
+                    onCardClick = { card -> selectedId = if (card.id == selectedId) null else card.id },
+                    onBarcodeClick = { card -> enlargedId = card.id },
                 )
             }
         }
@@ -210,6 +210,7 @@ private fun CardStack(
     cards: List<LoyaltyCard>,
     selectedId: Long?,
     onCardClick: (LoyaltyCard) -> Unit,
+    onBarcodeClick: (LoyaltyCard) -> Unit,
 ) {
     val listState = rememberLazyListState()
     ScrollSelectedIntoView(listState, cards, selectedId)
@@ -239,6 +240,7 @@ private fun CardStack(
                     card = card,
                     expanded = isSelected,
                     onClick = { onCardClick(card) },
+                    onBarcodeClick = { onBarcodeClick(card) },
                     modifier = Modifier.wrapContentHeight(Alignment.Top, unbounded = true),
                 )
             }
