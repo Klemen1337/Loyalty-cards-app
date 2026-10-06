@@ -241,7 +241,7 @@ private fun CardStack(
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize().nestedScroll(stretch.connection),
-        contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 4.dp + extraTop, bottom = 32.dp),
+        contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 12.dp + extraTop, bottom = 32.dp),
         overscrollEffect = null,
     ) {
         itemsIndexed(cards, key = { _, card -> card.id }) { index, card ->

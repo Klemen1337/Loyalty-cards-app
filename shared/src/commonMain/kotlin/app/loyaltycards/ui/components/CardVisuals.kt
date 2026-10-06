@@ -1,6 +1,7 @@
 package app.loyaltycards.ui.components
 
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -65,6 +66,10 @@ internal object WalletCardDefaults {
     val Shape = RoundedCornerShape(24.dp)
 }
 
+/** A light edge on dark cards and a dark edge on light ones. */
+internal fun cardEdgeColor(colorArgb: Long): Color =
+    if (Color(colorArgb).luminance() > 0.6f) Color.Black.copy(alpha = 0.12f) else Color.White.copy(alpha = 0.28f)
+
 /** White or near-black text, whichever reads better on the card color. */
 internal fun cardContentColor(colorArgb: Long): Color =
     if (Color(colorArgb).luminance() > 0.6f) Color(0xFF16171A) else Color.White
@@ -91,7 +96,9 @@ internal fun WalletCard(
         shape = WalletCardDefaults.Shape,
         color = Color(card.colorArgb),
         contentColor = cardContentColor(card.colorArgb),
-        shadowElevation = 6.dp,
+        // A thin edge and a deeper shadow keep overlapping cards visibly apart.
+        border = BorderStroke(1.dp, cardEdgeColor(card.colorArgb)),
+        shadowElevation = 12.dp,
     ) {
         Column(Modifier.padding(horizontal = 22.dp)) {
             Column(Modifier.height(WalletCardDefaults.FullHeight).padding(vertical = 20.dp)) {
