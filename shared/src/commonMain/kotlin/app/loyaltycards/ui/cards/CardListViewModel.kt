@@ -30,5 +30,3 @@ class CardListViewModel(private val repository: CardRepository) : ViewModel() {
         viewModelScope.launch { repository.delete(card.id) }
     }
 }
-
-internal fun cardCountLabel(count: Int): String = if (count == 1) "1 card" else "$count cards"

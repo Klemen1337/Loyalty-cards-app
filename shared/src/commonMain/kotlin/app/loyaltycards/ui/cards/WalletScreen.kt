@@ -47,6 +47,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.loyaltycards.domain.LoyaltyCard
+import app.loyaltycards.resources.Res
+import app.loyaltycards.resources.add_card
+import app.loyaltycards.resources.card_count
+import app.loyaltycards.resources.close_search
+import app.loyaltycards.resources.edit
+import app.loyaltycards.resources.empty_body
+import app.loyaltycards.resources.empty_title
+import app.loyaltycards.resources.no_match_body
+import app.loyaltycards.resources.no_match_title
+import app.loyaltycards.resources.search_cards
+import app.loyaltycards.resources.wallet_title
 import app.loyaltycards.ui.components.CircleIconButton
 import app.loyaltycards.ui.components.PillButton
 import app.loyaltycards.ui.components.PillStyle
@@ -55,6 +66,8 @@ import app.loyaltycards.ui.components.WalletCardDefaults
 import app.loyaltycards.ui.preview.PreviewData
 import app.loyaltycards.ui.preview.PreviewTheme
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun WalletScreen(
@@ -116,13 +129,13 @@ internal fun WalletContent(
                 uiState.isLoading -> Box(Modifier.fillMaxSize())
 
                 uiState.cards.isEmpty() -> EmptyMessage(
-                    title = "No cards yet",
-                    body = "Tap + to add your first loyalty card.",
+                    title = stringResource(Res.string.empty_title),
+                    body = stringResource(Res.string.empty_body),
                 )
 
                 visibleCards.isEmpty() -> EmptyMessage(
-                    title = "No matching cards",
-                    body = "Try a different store name.",
+                    title = stringResource(Res.string.no_match_title),
+                    body = stringResource(Res.string.no_match_body),
                 )
 
                 else -> CardStack(
@@ -155,22 +168,22 @@ private fun WalletHeader(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Column(Modifier.weight(1f)) {
-            Text("Cards", style = MaterialTheme.typography.displaySmall)
+            Text(stringResource(Res.string.wallet_title), style = MaterialTheme.typography.displaySmall)
             Text(
-                text = count?.let(::cardCountLabel) ?: "",
+                text = count?.let { pluralStringResource(Res.plurals.card_count, it, it) } ?: "",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
         PillButton(
-            text = "Edit",
+            text = stringResource(Res.string.edit),
             onClick = onEdit,
             style = PillStyle.Outlined,
             enabled = (count ?: 0) > 0,
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
         )
-        CircleIconButton(icon = Icons.Default.Search, contentDescription = "Search cards", onClick = onSearch)
-        CircleIconButton(icon = Icons.Default.Add, contentDescription = "Add card", onClick = onAdd, filled = true)
+        CircleIconButton(icon = Icons.Default.Search, contentDescription = stringResource(Res.string.search_cards), onClick = onSearch)
+        CircleIconButton(icon = Icons.Default.Add, contentDescription = stringResource(Res.string.add_card), onClick = onAdd, filled = true)
     }
 }
 
@@ -185,10 +198,10 @@ private fun SearchField(query: String, onQueryChange: (String) -> Unit, onClose:
             .fillMaxWidth()
             .padding(start = 20.dp, end = 20.dp, bottom = 16.dp)
             .focusRequester(focusRequester),
-        placeholder = { Text("Search cards") },
+        placeholder = { Text(stringResource(Res.string.search_cards)) },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
         trailingIcon = {
-            IconButton(onClick = onClose) { Icon(Icons.Default.Close, contentDescription = "Close search") }
+            IconButton(onClick = onClose) { Icon(Icons.Default.Close, contentDescription = stringResource(Res.string.close_search)) }
         },
         singleLine = true,
         shape = CircleShape,

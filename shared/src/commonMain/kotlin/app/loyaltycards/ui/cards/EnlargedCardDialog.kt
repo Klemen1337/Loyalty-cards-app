@@ -34,6 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import app.loyaltycards.domain.LoyaltyCard
+import app.loyaltycards.resources.Res
+import app.loyaltycards.resources.close
 import app.loyaltycards.ui.components.BarcodePanel
 import app.loyaltycards.ui.components.CardDetails
 import app.loyaltycards.ui.components.CardHeader
@@ -41,6 +43,7 @@ import app.loyaltycards.ui.components.cardContentColor
 import app.loyaltycards.ui.preview.PreviewData
 import app.loyaltycards.ui.preview.PreviewTheme
 import app.loyaltycards.ui.theme.EnlargedCardBackdrop
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Full-screen card with a large barcode, for scanning at the till. On a portrait screen the
@@ -108,7 +111,7 @@ private fun ClosePill(onClick: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.size(20.dp))
-            Text("Close", style = MaterialTheme.typography.labelLarge)
+            Text(stringResource(Res.string.close), style = MaterialTheme.typography.labelLarge)
         }
     }
 }

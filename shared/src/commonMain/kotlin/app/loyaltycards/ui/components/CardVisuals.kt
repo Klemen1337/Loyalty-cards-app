@@ -42,6 +42,12 @@ import androidx.compose.ui.unit.sp
 import app.loyaltycards.domain.BarcodeFormat
 import app.loyaltycards.domain.LoyaltyCard
 import app.loyaltycards.domain.formatCardCode
+import app.loyaltycards.resources.Res
+import app.loyaltycards.resources.barcode_description
+import app.loyaltycards.resources.enlarge_barcode
+import app.loyaltycards.resources.label_code
+import app.loyaltycards.resources.label_name_on_card
+import app.loyaltycards.resources.tap_barcode_to_enlarge
 import app.loyaltycards.ui.preview.PreviewData
 import app.loyaltycards.ui.preview.PreviewTheme
 import io.github.alexzhirkevich.qrose.oned.BarcodePainter
@@ -49,6 +55,7 @@ import io.github.alexzhirkevich.qrose.oned.BarcodeType
 import io.github.alexzhirkevich.qrose.oned.rememberBarcodePainter
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 internal object WalletCardDefaults {
     /** Visible strip of a card that sits under the next one in the stack. */
@@ -95,7 +102,7 @@ internal fun WalletCard(
             }
             BarcodePanel(
                 card = card,
-                caption = "Tap barcode to enlarge",
+                caption = stringResource(Res.string.tap_barcode_to_enlarge),
                 // A collapsed card still lays out its (hidden) panel, so only an expanded one reacts.
                 onClick = if (expanded) onBarcodeClick else null,
                 modifier = Modifier.height(WalletCardDefaults.BarcodePanelHeight),
@@ -137,12 +144,12 @@ internal fun CardDetails(card: LoyaltyCard, modifier: Modifier = Modifier) {
     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
         val nameOnCard = card.nameOnCard
         if (!nameOnCard.isNullOrBlank()) {
-            LabeledValue(label = "NAME ON CARD", value = nameOnCard, alignEnd = false, modifier = Modifier.weight(1f))
+            LabeledValue(label = stringResource(Res.string.label_name_on_card), value = nameOnCard, alignEnd = false, modifier = Modifier.weight(1f))
         } else {
             Spacer(Modifier.weight(1f))
         }
         LabeledValue(
-            label = "CODE",
+            label = stringResource(Res.string.label_code),
             value = formatCardCode(card.cardNumber, card.barcodeFormat),
             alignEnd = true,
         )
@@ -176,11 +183,12 @@ internal fun BarcodePanel(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
 ) {
+    val enlargeLabel = stringResource(Res.string.enlarge_barcode)
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .then(if (onClick != null) Modifier.clickable(onClickLabel = "Enlarge barcode", onClick = onClick) else Modifier),
+            .then(if (onClick != null) Modifier.clickable(onClickLabel = enlargeLabel, onClick = onClick) else Modifier),
         shape = RoundedCornerShape(16.dp),
         color = Color.White,
         contentColor = Color(0xFF16171A),
@@ -216,7 +224,7 @@ internal fun CardCode(code: String, format: BarcodeFormat, modifier: Modifier = 
         if (painter != null) {
             Image(
                 painter = painter,
-                contentDescription = "Barcode ${formatCardCode(code, format)}",
+                contentDescription = stringResource(Res.string.barcode_description, formatCardCode(code, format)),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = if (isLinear) ContentScale.FillBounds else ContentScale.Fit,
             )

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wallet_title">Kartice</string>
+    <string name="edit">Uredi</string>
+    <string name="search_cards">Išči kartice</string>
+    <string name="close_search">Zapri iskanje</string>
+    <string name="add_card">Dodaj kartico</string>
+    <string name="empty_title">Še nimate kartic</string>
+    <string name="empty_body">Tapnite + in dodajte svojo prvo kartico zvestobe.</string>
+    <string name="no_match_title">Ni ujemajočih kartic</string>
+    <string name="no_match_body">Poskusite z drugim imenom trgovine.</string>
+    <string name="edit_cards_title">Uredi kartice</string>
+    <string name="done">Končano</string>
+    <string name="move_up">Premakni gor</string>
+    <string name="move_down">Premakni dol</string>
+    <string name="reorder_hint">Pridržite kartico in jo povlecite na novo mesto.</string>
+    <string name="remove_card_named">Odstrani %1$s</string>
+    <string name="remove_card_question">Odstranim kartico %1$s?</string>
+    <string name="remove_card_body">Kartica in njena koda bosta izbrisani iz denarnice. Kadar koli jo lahko znova dodate.</string>
+    <string name="remove_card">Odstrani kartico</string>
+    <string name="cancel">Prekliči</string>
+    <string name="close">Zapri</string>
+    <string name="back">Nazaj</string>
+    <string name="add_to_wallet">Dodaj v denarnico</string>
+    <string name="scan_barcode">Skeniraj črtno kodo</string>
+    <string name="scan_hint">Kamero usmerite v hrbtno stran kartice</string>
+    <string name="scan_coming_soon">Skeniranje prihaja v naslednji posodobitvi. Za zdaj vnesite kodo spodaj.</string>
+    <string name="or_enter_manually">ali vnesite ročno</string>
+    <string name="store_label">Trgovina</string>
+    <string name="store_placeholder">Iščite, npr. Lidl Plus</string>
+    <string name="store_error">Vnesite ime trgovine</string>
+    <string name="code_label">Koda kartice</string>
+    <string name="code_placeholder">Številka pod črtno kodo</string>
+    <string name="code_error">Vnesite kodo pod črtno kodo</string>
+    <string name="name_on_card_label">Ime na kartici</string>
+    <string name="optional_suffix">(neobvezno)</string>
+    <string name="name_on_card_placeholder">Kot je natisnjeno na kartici</string>
+    <string name="trademark_note">Imena in logotipi trgovin so last njihovih lastnikov. Aplikacija ni povezana z nobeno trgovino.</string>
+    <string name="tap_barcode_to_enlarge">Tapnite črtno kodo za povečavo</string>
+    <string name="enlarge_barcode">Povečaj črtno kodo</string>
+    <string name="label_name_on_card">IME NA KARTICI</string>
+    <string name="label_code">KODA</string>
+    <string name="barcode_description">Črtna koda %1$s</string>
+    <plurals name="card_count">
+        <item quantity="one">%1$d kartica</item>
+        <item quantity="two">%1$d kartici</item>
+        <item quantity="few">%1$d kartice</item>
+        <item quantity="other">%1$d kartic</item>
+    </plurals>
+</resources>

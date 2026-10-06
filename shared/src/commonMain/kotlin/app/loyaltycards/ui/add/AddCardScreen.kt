@@ -59,6 +59,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.loyaltycards.domain.Store
+import app.loyaltycards.resources.Res
+import app.loyaltycards.resources.add_card
+import app.loyaltycards.resources.add_to_wallet
+import app.loyaltycards.resources.back
+import app.loyaltycards.resources.code_error
+import app.loyaltycards.resources.code_label
+import app.loyaltycards.resources.code_placeholder
+import app.loyaltycards.resources.name_on_card_label
+import app.loyaltycards.resources.name_on_card_placeholder
+import app.loyaltycards.resources.optional_suffix
+import app.loyaltycards.resources.or_enter_manually
+import app.loyaltycards.resources.scan_barcode
+import app.loyaltycards.resources.scan_coming_soon
+import app.loyaltycards.resources.scan_hint
+import app.loyaltycards.resources.store_error
+import app.loyaltycards.resources.store_label
+import app.loyaltycards.resources.store_placeholder
+import app.loyaltycards.resources.trademark_note
 import app.loyaltycards.ui.components.CircleIconButton
 import app.loyaltycards.ui.components.PillButton
 import app.loyaltycards.ui.components.brandLogo
@@ -67,6 +85,7 @@ import app.loyaltycards.ui.preview.PreviewData
 import app.loyaltycards.ui.preview.PreviewTheme
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AddCardScreen(viewModel: AddCardViewModel, onBack: () -> Unit) {
@@ -100,7 +119,7 @@ internal fun AddCardContent(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             PillButton(
-                text = "Add to wallet",
+                text = stringResource(Res.string.add_to_wallet),
                 onClick = onSave,
                 enabled = !state.isSaving,
                 modifier = Modifier
@@ -125,30 +144,31 @@ internal fun AddCardContent(
             ) {
                 CircleIconButton(
                     icon = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(Res.string.back),
                     onClick = onBack,
                 )
                 Spacer(Modifier.width(14.dp))
-                Text("Add card", style = MaterialTheme.typography.displaySmall)
+                Text(stringResource(Res.string.add_card), style = MaterialTheme.typography.displaySmall)
             }
 
+            val scanComingSoon = stringResource(Res.string.scan_coming_soon)
             ScanPanel(
                 onClick = {
                     scope.launch {
                         snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarHostState.showSnackbar("Scanning is coming in the next update. Enter the code below for now.")
+                        snackbarHostState.showSnackbar(scanComingSoon)
                     }
                 },
             )
 
             OrDivider()
 
-            FieldLabel("Store")
+            FieldLabel(stringResource(Res.string.store_label))
             FormTextField(
                 value = state.storeQuery,
                 onValueChange = onStoreQueryChange,
-                placeholder = "Search, e.g. Lidl Plus",
-                error = state.storeError,
+                placeholder = stringResource(Res.string.store_placeholder),
+                error = if (state.storeMissing) stringResource(Res.string.store_error) else null,
                 capitalization = KeyboardCapitalization.Words,
             )
             if (state.suggestions.isNotEmpty()) {
@@ -156,28 +176,28 @@ internal fun AddCardContent(
             }
 
             Spacer(Modifier.height(18.dp))
-            FieldLabel("Card code")
+            FieldLabel(stringResource(Res.string.code_label))
             FormTextField(
                 value = state.cardCode,
                 onValueChange = onCardCodeChange,
-                placeholder = "Number under the barcode",
-                error = state.codeError,
+                placeholder = stringResource(Res.string.code_placeholder),
+                error = if (state.codeMissing) stringResource(Res.string.code_error) else null,
                 keyboardType = KeyboardType.Ascii,
             )
 
             Spacer(Modifier.height(18.dp))
-            FieldLabel("Name on card", optional = true)
+            FieldLabel(stringResource(Res.string.name_on_card_label), optional = true)
             FormTextField(
                 value = state.nameOnCard,
                 onValueChange = onNameOnCardChange,
-                placeholder = "As printed on the card",
+                placeholder = stringResource(Res.string.name_on_card_placeholder),
                 capitalization = KeyboardCapitalization.Words,
                 imeAction = ImeAction.Done,
                 onDone = onSave,
             )
             Spacer(Modifier.height(24.dp))
             Text(
-                text = "Store names and logos belong to their owners. This app isn't affiliated with any store.",
+                text = stringResource(Res.string.trademark_note),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -204,10 +224,10 @@ private fun ScanPanel(onClick: () -> Unit) {
             ) {
                 BarcodeGlyph()
                 Spacer(Modifier.height(14.dp))
-                Text("Scan barcode", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(Res.string.scan_barcode), style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(6.dp))
                 Text(
-                    text = "Point the camera at the back of your card",
+                    text = stringResource(Res.string.scan_hint),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.8f),
                 )
@@ -272,7 +292,7 @@ private fun OrDivider() {
     ) {
         HorizontalDivider(Modifier.weight(1f), color = MaterialTheme.colorScheme.outline)
         Text(
-            text = "or enter manually",
+            text = stringResource(Res.string.or_enter_manually),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -283,11 +303,12 @@ private fun OrDivider() {
 
 @Composable
 private fun FieldLabel(text: String, optional: Boolean = false) {
+    val optionalSuffix = stringResource(Res.string.optional_suffix)
     Text(
         text = buildAnnotatedString {
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(text) }
             if (optional) {
-                withStyle(SpanStyle(fontWeight = FontWeight.Normal)) { append(" (optional)") }
+                withStyle(SpanStyle(fontWeight = FontWeight.Normal)) { append(" $optionalSuffix") }
             }
         },
         style = MaterialTheme.typography.bodyLarge,

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wallet_title">Cards</string>
+    <string name="edit">Edit</string>
+    <string name="search_cards">Search cards</string>
+    <string name="close_search">Close search</string>
+    <string name="add_card">Add card</string>
+    <string name="empty_title">No cards yet</string>
+    <string name="empty_body">Tap + to add your first loyalty card.</string>
+    <string name="no_match_title">No matching cards</string>
+    <string name="no_match_body">Try a different store name.</string>
+    <string name="edit_cards_title">Edit cards</string>
+    <string name="done">Done</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="reorder_hint">Hold a card and drag to reorder.</string>
+    <string name="remove_card_named">Remove %1$s</string>
+    <string name="remove_card_question">Remove %1$s?</string>
+    <string name="remove_card_body">The card and its code will be deleted from your wallet. You can add it again anytime.</string>
+    <string name="remove_card">Remove card</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="back">Back</string>
+    <string name="add_to_wallet">Add to wallet</string>
+    <string name="scan_barcode">Scan barcode</string>
+    <string name="scan_hint">Point the camera at the back of your card</string>
+    <string name="scan_coming_soon">Scanning is coming in the next update. Enter the code below for now.</string>
+    <string name="or_enter_manually">or enter manually</string>
+    <string name="store_label">Store</string>
+    <string name="store_placeholder">Search, e.g. Lidl Plus</string>
+    <string name="store_error">Enter the store name</string>
+    <string name="code_label">Card code</string>
+    <string name="code_placeholder">Number under the barcode</string>
+    <string name="code_error">Enter the code under the barcode</string>
+    <string name="name_on_card_label">Name on card</string>
+    <string name="optional_suffix">(optional)</string>
+    <string name="name_on_card_placeholder">As printed on the card</string>
+    <string name="trademark_note">Store names and logos belong to their owners. This app isn't affiliated with any store.</string>
+    <string name="tap_barcode_to_enlarge">Tap barcode to enlarge</string>
+    <string name="enlarge_barcode">Enlarge barcode</string>
+    <string name="label_name_on_card">NAME ON CARD</string>
+    <string name="label_code">CODE</string>
+    <string name="barcode_description">Barcode %1$s</string>
+    <plurals name="card_count">
+        <item quantity="one">%1$d card</item>
+        <item quantity="other">%1$d cards</item>
+    </plurals>
+</resources>

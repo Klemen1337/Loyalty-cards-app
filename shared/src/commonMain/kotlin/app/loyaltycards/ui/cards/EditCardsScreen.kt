@@ -46,12 +46,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.loyaltycards.domain.LoyaltyCard
+import app.loyaltycards.resources.Res
+import app.loyaltycards.resources.cancel
+import app.loyaltycards.resources.card_count
+import app.loyaltycards.resources.done
+import app.loyaltycards.resources.edit_cards_title
+import app.loyaltycards.resources.move_down
+import app.loyaltycards.resources.move_up
+import app.loyaltycards.resources.remove_card
+import app.loyaltycards.resources.remove_card_body
+import app.loyaltycards.resources.remove_card_named
+import app.loyaltycards.resources.remove_card_question
+import app.loyaltycards.resources.reorder_hint
 import app.loyaltycards.ui.components.CardStrip
 import app.loyaltycards.ui.components.PillButton
 import app.loyaltycards.ui.components.PillStyle
 import app.loyaltycards.ui.preview.PreviewData
 import app.loyaltycards.ui.preview.PreviewTheme
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -82,14 +96,14 @@ internal fun EditCardsContent(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text("Edit cards", style = MaterialTheme.typography.displaySmall)
+                    Text(stringResource(Res.string.edit_cards_title), style = MaterialTheme.typography.displaySmall)
                     Text(
-                        text = cardCountLabel(cards.size),
+                        text = pluralStringResource(Res.plurals.card_count, cards.size, cards.size),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                PillButton(text = "Done", onClick = onDone)
+                PillButton(text = stringResource(Res.string.done), onClick = onDone)
             }
             ReorderableCardList(
                 cards = cards,
@@ -121,6 +135,8 @@ private fun ReorderableCardList(
     var orderedCards by remember(cards) { mutableStateOf(cards) }
     val haptics = LocalHapticFeedback.current
     val lazyListState = rememberLazyListState()
+    val moveUpLabel = stringResource(Res.string.move_up)
+    val moveDownLabel = stringResource(Res.string.move_down)
     val reorderableState = rememberReorderableLazyListState(lazyListState) { from, to ->
         orderedCards = orderedCards.move(from.index, to.index)
         haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -144,9 +160,9 @@ private fun ReorderableCardList(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.semantics {
                         customActions = buildList {
-                            if (index > 0) add(CustomAccessibilityAction("Move up") { moveAndSave(index, index - 1); true })
+                            if (index > 0) add(CustomAccessibilityAction(moveUpLabel) { moveAndSave(index, index - 1); true })
                             if (index < orderedCards.lastIndex) {
-                                add(CustomAccessibilityAction("Move down") { moveAndSave(index, index + 1); true })
+                                add(CustomAccessibilityAction(moveDownLabel) { moveAndSave(index, index + 1); true })
                             }
                         }
                     },
@@ -168,7 +184,7 @@ private fun ReorderableCardList(
         }
         item {
             Text(
-                text = "Hold a card and drag to reorder.",
+                text = stringResource(Res.string.reorder_hint),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
@@ -181,9 +197,10 @@ private fun ReorderableCardList(
 /** Red minus in a pale circle, as in the design. */
 @Composable
 private fun RemoveButton(cardName: String, onClick: () -> Unit) {
+    val description = stringResource(Res.string.remove_card_named, cardName)
     Surface(
         onClick = onClick,
-        modifier = Modifier.size(44.dp).semantics { contentDescription = "Remove $cardName" },
+        modifier = Modifier.size(44.dp).semantics { contentDescription = description },
         shape = CircleShape,
         color = MaterialTheme.colorScheme.errorContainer,
     ) {
@@ -218,23 +235,23 @@ internal fun RemoveCardSheet(card: LoyaltyCard, onConfirm: () -> Unit, onDismiss
         ) {
             CardStrip(card = card, showCodeEnding = false, modifier = Modifier.height(64.dp))
             Spacer(Modifier.height(20.dp))
-            Text("Remove ${card.name}?", style = MaterialTheme.typography.headlineSmall)
+            Text(stringResource(Res.string.remove_card_question, card.name), style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "The card and its code will be deleted from your wallet. You can add it again anytime.",
+                text = stringResource(Res.string.remove_card_body),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(24.dp))
             PillButton(
-                text = "Remove card",
+                text = stringResource(Res.string.remove_card),
                 onClick = { hideThen(onConfirm) },
                 style = PillStyle.Destructive,
                 modifier = Modifier.fillMaxWidth().height(56.dp),
             )
             Spacer(Modifier.height(12.dp))
             PillButton(
-                text = "Cancel",
+                text = stringResource(Res.string.cancel),
                 onClick = { hideThen(onDismiss) },
                 style = PillStyle.Outlined,
                 modifier = Modifier.fillMaxWidth().height(56.dp),

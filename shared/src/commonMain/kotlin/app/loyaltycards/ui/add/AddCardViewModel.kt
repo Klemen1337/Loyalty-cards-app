@@ -6,6 +6,7 @@ import app.loyaltycards.data.CardRepository
 import app.loyaltycards.domain.BarcodeFormat
 import app.loyaltycards.domain.Store
 import app.loyaltycards.domain.StoreCatalog
+import app.loyaltycards.resources.Res
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,8 +22,8 @@ data class AddCardFormState(
     val showErrors: Boolean = false,
     val isSaving: Boolean = false,
 ) {
-    val storeError: String? get() = if (showErrors && storeQuery.isBlank()) "Enter the store name" else null
-    val codeError: String? get() = if (showErrors && normalizedCode.isEmpty()) "Enter the code under the barcode" else null
+    val storeMissing: Boolean get() = showErrors && storeQuery.isBlank()
+    val codeMissing: Boolean get() = showErrors && normalizedCode.isEmpty()
     val suggestions: List<Store>
         get() = if (selectedStore != null) emptyList() else StoreCatalog.search(storeQuery).take(5)
 
