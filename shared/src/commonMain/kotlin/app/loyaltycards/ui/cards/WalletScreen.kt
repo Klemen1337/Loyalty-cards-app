@@ -54,8 +54,6 @@ import app.loyaltycards.resources.add_card
 import app.loyaltycards.resources.card_count
 import app.loyaltycards.resources.close_search
 import app.loyaltycards.resources.edit
-import app.loyaltycards.resources.empty_body
-import app.loyaltycards.resources.empty_title
 import app.loyaltycards.resources.no_match_body
 import app.loyaltycards.resources.no_match_title
 import app.loyaltycards.resources.search_cards
@@ -134,10 +132,7 @@ internal fun WalletContent(
                 // Cards load in a few milliseconds; a spinner would only flash.
                 uiState.isLoading -> Box(Modifier.fillMaxSize())
 
-                uiState.cards.isEmpty() -> EmptyMessage(
-                    title = stringResource(Res.string.empty_title),
-                    body = stringResource(Res.string.empty_body),
-                )
+                uiState.cards.isEmpty() -> EmptyWallet(onAddCard = onAddCard)
 
                 visibleCards.isEmpty() -> EmptyMessage(
                     title = stringResource(Res.string.no_match_title),

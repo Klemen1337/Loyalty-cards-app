@@ -5,8 +5,9 @@
     <string name="search_cards">Išči kartice</string>
     <string name="close_search">Zapri iskanje</string>
     <string name="add_card">Dodaj kartico</string>
-    <string name="empty_title">Še nimate kartic</string>
-    <string name="empty_body">Tapnite + in dodajte svojo prvo kartico zvestobe.</string>
+    <string name="empty_title">Denarnica je prazna</string>
+    <string name="empty_body">Dodajte kartice zvestobe in jih imejte vse na enem mestu.</string>
+    <string name="add_first_card">Dodaj prvo kartico</string>
     <string name="no_match_title">Ni ujemajočih kartic</string>
     <string name="no_match_body">Poskusite z drugim imenom trgovine.</string>
     <string name="edit_cards_title">Uredi kartice</string>
