@@ -1,4 +1,4 @@
-# Loyalty Cards
+# Kartice
 
 Offline Android and iOS app for keeping store loyalty cards (IKEA, Spar, Mercator, Merkur, ...) in one place.
 Built with Kotlin Multiplatform and Compose Multiplatform: UI, storage and logic are shared, the platform apps are thin shells.
