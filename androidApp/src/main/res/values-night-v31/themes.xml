@@ -1,0 +1,10 @@
+<resources>
+    <!-- Android 12+ always shows a launch screen. Make it the plain app background with no icon,
+         so it looks like the app's first frame instead of a splash. -->
+    <style name="Theme.LoyaltyCards" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+        <item name="android:windowSplashScreenBackground">@color/window_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_icon_none</item>
+        <item name="android:windowSplashScreenAnimationDuration">0</item>
+    </style>
+</resources>

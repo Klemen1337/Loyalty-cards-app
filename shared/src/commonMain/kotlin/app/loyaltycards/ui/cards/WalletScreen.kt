@@ -23,7 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -94,7 +93,7 @@ internal fun WalletContent(
                 .pointerInput(Unit) { detectTapGestures { selectedId = null } },
         ) {
             WalletHeader(
-                count = uiState.cards.size,
+                count = if (uiState.isLoading) null else uiState.cards.size,
                 onEdit = onEditCards,
                 onSearch = {
                     searching = !searching
@@ -113,9 +112,8 @@ internal fun WalletContent(
                 )
             }
             when {
-                uiState.isLoading -> Box(Modifier.fillMaxSize(), Alignment.Center) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
-                }
+                // Cards load in a few milliseconds; a spinner would only flash.
+                uiState.isLoading -> Box(Modifier.fillMaxSize())
 
                 uiState.cards.isEmpty() -> EmptyMessage(
                     title = "No cards yet",
@@ -145,7 +143,8 @@ internal fun WalletContent(
 
 @Composable
 private fun WalletHeader(
-    count: Int,
+    /** Null while the cards are still loading. */
+    count: Int?,
     onEdit: () -> Unit,
     onSearch: () -> Unit,
     onAdd: () -> Unit,
@@ -158,7 +157,7 @@ private fun WalletHeader(
         Column(Modifier.weight(1f)) {
             Text("Cards", style = MaterialTheme.typography.displaySmall)
             Text(
-                text = cardCountLabel(count),
+                text = count?.let(::cardCountLabel) ?: "",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -167,7 +166,7 @@ private fun WalletHeader(
             text = "Edit",
             onClick = onEdit,
             style = PillStyle.Outlined,
-            enabled = count > 0,
+            enabled = (count ?: 0) > 0,
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
         )
         CircleIconButton(icon = Icons.Default.Search, contentDescription = "Search cards", onClick = onSearch)
