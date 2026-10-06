@@ -67,7 +67,6 @@ import app.loyaltycards.ui.components.WalletCard
 import app.loyaltycards.ui.components.WalletCardDefaults
 import app.loyaltycards.ui.preview.PreviewData
 import app.loyaltycards.ui.preview.PreviewTheme
-import kotlin.math.abs
 import kotlin.math.max
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.pluralStringResource
@@ -230,7 +229,8 @@ private fun CardStack(
     // Pulling past either end spreads the cards apart, and they spring back on release.
     val stretch = rememberStretchOverscrollState()
     val stretchDp = with(LocalDensity.current) { stretch.stretchPx.toDp() }
-    val extraGap = abs(stretchDp.value).dp * 0.9f / max(1, cards.lastIndex)
+    // Pulling down spreads the cards; pulling up squeezes them together.
+    val gapChange = stretchDp * 0.9f / max(1, cards.lastIndex)
     val extraTop = if (stretchDp > 0.dp) stretchDp * 0.1f else 0.dp
 
     LazyColumn(
@@ -254,8 +254,13 @@ private fun CardStack(
 
             // The box is only as tall as the visible part; the card draws past it and the
             // next card covers the rest.
-            val topSpacing = if (index > 0) gap + extraGap else gap
-            Box(Modifier.fillMaxWidth().padding(top = topSpacing).height(visibleHeight)) {
+            // The gap below each card is its visible height, so stretching changes that height.
+            val stretchedHeight = if (index < cards.lastIndex) {
+                (visibleHeight + gapChange).coerceAtLeast(MinSqueezedHeight)
+            } else {
+                visibleHeight
+            }
+            Box(Modifier.fillMaxWidth().padding(top = gap).height(stretchedHeight)) {
                 WalletCard(
                     card = card,
                     expanded = isSelected,
@@ -267,6 +272,9 @@ private fun CardStack(
         }
     }
 }
+
+/** How much of a card stays visible when the stack is squeezed by pulling up. */
+private val MinSqueezedHeight = 20.dp
 
 /** After a card expands, scrolls so its barcode isn't cut off at the bottom. */
 @Composable
