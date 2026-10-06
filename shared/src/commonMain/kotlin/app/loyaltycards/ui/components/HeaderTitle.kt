@@ -17,7 +17,7 @@ import kotlin.math.roundToInt
 /** Height shared by the header title block and the header buttons next to it. */
 internal val HeaderHeight: Dp = 48.dp
 
-private val TitleSize = 32.sp
+private val TitleSize = 26.sp
 private val SubtitleSize = 14.sp
 
 /** Space between the bottom of the title and the top of the subtitle's capitals. */
