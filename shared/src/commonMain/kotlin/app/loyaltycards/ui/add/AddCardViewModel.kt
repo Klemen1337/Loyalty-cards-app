@@ -37,7 +37,7 @@ class AddCardViewModel(private val repository: CardRepository) : ViewModel() {
 
     fun onStoreQueryChange(value: String) = _state.update { it.copy(storeQuery = value, selectedStore = null) }
 
-    fun onStoreSelected(store: Store) = _state.update { it.copy(storeQuery = store.name, selectedStore = store) }
+    fun onStoreSelected(store: Store) = _state.update { it.copy(storeQuery = store.cardName, selectedStore = store) }
 
     fun onCardCodeChange(value: String) = _state.update { it.copy(cardCode = value) }
 
@@ -57,7 +57,7 @@ class AddCardViewModel(private val repository: CardRepository) : ViewModel() {
         viewModelScope.launch {
             repository.add(
                 storeId = store?.id,
-                name = store?.name ?: storeName,
+                name = store?.cardName ?: storeName,
                 cardNumber = form.normalizedCode,
                 barcodeFormat = BarcodeFormat.infer(form.normalizedCode),
                 colorArgb = store?.colorArgb ?: StoreCatalog.fallbackColor(storeName),

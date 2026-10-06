@@ -18,13 +18,13 @@ CREATE INDEX loyalty_card_position ON loyalty_card(position);
 
 -- Sample cards, inserted only when the database is first created.
 INSERT INTO loyalty_card (store_id, name, card_number, barcode_format, color, position, created_at) VALUES
-    ('mercator', 'Mercator Pika', '2400118352905', 'EAN_13', 4291301422, 0, 0),
-    ('spar', 'SPAR plus', '9120045716283', 'EAN_13', 4278939194, 1, 0),
-    ('dm', 'dm', '4066447208818', 'EAN_13', 4280367728, 2, 0),
+    ('mercator', 'Mercator Pika', '2400118352905', 'EAN_13', 4292809548, 0, 0),
+    ('spar', 'SPAR plus', '9120045716283', 'EAN_13', 4292740101, 1, 0),
+    ('dm', 'dm', '4066447208818', 'EAN_13', 4278200440, 2, 0),
     ('ikea', 'IKEA Family', '6275980017342210', 'CODE_128', 4278212771, 3, 0),
     ('lidl', 'Lidl Plus', '3820117640398', 'EAN_13', 4278210730, 4, 0),
-    ('hofer', 'Hofer', '2900008181641', 'EAN_13', 4280035925, 5, 0),
-    ('merkur', 'Merkur', '7701234567', 'CODE_128', 4280107658, 6, 0);
+    ('hofer', 'Hofer', '2900008181641', 'EAN_13', 4278190175, 5, 0),
+    ('merkur', 'Merkur', '7701234567', 'CODE_128', 4280578095, 6, 0);
 
 selectAll:
 SELECT *

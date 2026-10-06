@@ -2,28 +2,25 @@ package app.loyaltycards.domain
 
 data class Store(
     val id: String,
+    /** Brand name, e.g. "Lidl". */
     val name: String,
-    /** Brand color as ARGB. */
+    /** Name shown on the card, e.g. "Lidl Plus". */
+    val cardName: String,
+    val category: String,
+    /** Brand color as ARGB, used as the card background. */
     val colorArgb: Long,
-    /** Short brand mark shown on the card, e.g. "IKEA" or "M". */
-    val mark: String,
-)
+    val secondaryColorArgb: Long?,
+) {
+    /** Short text shown in the card's corner when there's no logo. */
+    val mark: String get() = name.first().uppercase()
+}
 
-/** Stores the app knows, used for suggestions and card colors. */
+/**
+ * Stores the app knows, used for suggestions, card colors and logos. The list is generated from
+ * docs/brands/brands.json by scripts/generate_brands.py.
+ */
 object StoreCatalog {
-    val stores: List<Store> = listOf(
-        Store("mercator", "Mercator Pika", 0xFFC8102E, "M"),
-        Store("spar", "SPAR plus", 0xFF0B6E3A, "S"),
-        Store("dm", "dm", 0xFF213A70, "dm"),
-        Store("ikea", "IKEA Family", 0xFF0058A3, "IKEA"),
-        Store("lidl", "Lidl Plus", 0xFF0050AA, "L"),
-        Store("hofer", "Hofer", 0xFF1C2A55, "H"),
-        Store("tus", "Tuš klub", 0xFFB5161B, "T"),
-        Store("petrol", "Petrol Klub", 0xFF00594C, "P"),
-        Store("muller", "Müller", 0xFFE5501E, "M"),
-        Store("decathlon", "DECATHLON", 0xFF0082C3, "D"),
-        Store("merkur", "Merkur", 0xFF1D428A, "M"),
-    )
+    val stores: List<Store> = catalogStores
 
     /** Colors for stores that aren't in the catalog. */
     private val fallbackColors: List<Long> = listOf(
@@ -32,16 +29,22 @@ object StoreCatalog {
 
     fun byId(id: String?): Store? = id?.let { key -> stores.firstOrNull { it.id == key } }
 
-    fun findByName(name: String): Store? =
-        stores.firstOrNull { it.name.equals(name.trim(), ignoreCase = true) }
+    fun findByName(name: String): Store? {
+        val trimmed = name.trim()
+        return stores.firstOrNull {
+            it.cardName.equals(trimmed, ignoreCase = true) || it.name.equals(trimmed, ignoreCase = true)
+        }
+    }
 
-    /** Stores whose name contains [query], best matches first. */
+    /** Stores whose brand or card name contains [query], best matches first. */
     fun search(query: String): List<Store> {
         val q = query.trim()
         if (q.isEmpty()) return emptyList()
         return stores
-            .filter { it.name.contains(q, ignoreCase = true) }
-            .sortedBy { if (it.name.startsWith(q, ignoreCase = true)) 0 else 1 }
+            .filter { it.name.contains(q, ignoreCase = true) || it.cardName.contains(q, ignoreCase = true) }
+            .sortedBy {
+                if (it.name.startsWith(q, ignoreCase = true) || it.cardName.startsWith(q, ignoreCase = true)) 0 else 1
+            }
     }
 
     /** A stable color for a store name the catalog doesn't know. */

@@ -45,3 +45,11 @@ To run on a real device, set your `TEAM_ID` in `iosApp/Configuration/Config.xcco
 
 - `applicationId` / bundle id are `app.loyaltycards` placeholders: change them in `androidApp/build.gradle.kts` and `iosApp/Configuration/Config.xcconfig` before the first store upload, since they can't change afterwards.
 - App icons, release signing and store listings are not set up yet.
+
+## Stores and logos
+
+The store list (names, card names, colors) and the store logos are generated from `docs/brands/`:
+edit `docs/brands/brands.json` or the SVGs in `docs/brands/logos/`, then run `python scripts/generate_brands.py`.
+Logos are single-color [Simple Icons](https://simpleicons.org) drawings (CC0). The marks themselves are the brands'
+trademarks; the app says it isn't affiliated with any store. To drop a brand's logo after a takedown request, delete its
+SVG (or add it to `SKIPPED_LOGOS`) and regenerate.

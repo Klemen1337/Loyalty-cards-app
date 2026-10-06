@@ -6,6 +6,7 @@ import app.loyaltycards.db.LoyaltyCardsDatabase
 import app.loyaltycards.db.Loyalty_card
 import app.loyaltycards.domain.BarcodeFormat
 import app.loyaltycards.domain.LoyaltyCard
+import app.loyaltycards.domain.StoreCatalog
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -73,7 +74,8 @@ private fun Loyalty_card.toDomain() = LoyaltyCard(
     name = name,
     cardNumber = card_number,
     barcodeFormat = BarcodeFormat.fromName(barcode_format),
-    colorArgb = color,
+    // Catalog stores follow the catalog, so brand color updates reach existing cards.
+    colorArgb = StoreCatalog.byId(store_id)?.colorArgb ?: color,
     nameOnCard = name_on_card,
     position = position,
     createdAtMillis = created_at,

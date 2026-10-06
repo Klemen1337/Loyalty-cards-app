@@ -26,6 +26,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -60,9 +61,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.loyaltycards.domain.Store
 import app.loyaltycards.ui.components.CircleIconButton
 import app.loyaltycards.ui.components.PillButton
+import app.loyaltycards.ui.components.brandLogo
+import app.loyaltycards.ui.components.cardContentColor
 import app.loyaltycards.ui.preview.PreviewData
 import app.loyaltycards.ui.preview.PreviewTheme
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun AddCardScreen(viewModel: AddCardViewModel, onBack: () -> Unit) {
@@ -170,6 +174,12 @@ internal fun AddCardContent(
                 capitalization = KeyboardCapitalization.Words,
                 imeAction = ImeAction.Done,
                 onDone = onSave,
+            )
+            Spacer(Modifier.height(24.dp))
+            Text(
+                text = "Store names and logos belong to their owners. This app isn't affiliated with any store.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(24.dp))
         }
@@ -345,12 +355,41 @@ private fun StoreSuggestions(stores: List<Store>, onSelect: (Store) -> Unit) {
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Box(Modifier.size(width = 28.dp, height = 20.dp).clip(RoundedCornerShape(5.dp)).background(Color(store.colorArgb)))
+                        StoreSwatch(store)
                         Spacer(Modifier.width(14.dp))
-                        Text(store.name, style = MaterialTheme.typography.bodyLarge)
+                        Column {
+                            Text(store.cardName, style = MaterialTheme.typography.bodyLarge)
+                            if (store.name != store.cardName) {
+                                Text(
+                                    text = store.name,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
                     }
                 }
             }
+        }
+    }
+}
+
+/** Small card in the store's color with its logo or initial. */
+@Composable
+private fun StoreSwatch(store: Store) {
+    val logo = brandLogo(store.id)
+    val contentColor = cardContentColor(store.colorArgb)
+    Box(
+        modifier = Modifier
+            .size(width = 40.dp, height = 28.dp)
+            .clip(RoundedCornerShape(6.dp))
+            .background(Color(store.colorArgb)),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (logo != null) {
+            Icon(painterResource(logo), contentDescription = null, tint = contentColor, modifier = Modifier.size(20.dp))
+        } else {
+            Text(store.mark, style = MaterialTheme.typography.titleSmall, color = contentColor)
         }
     }
 }
