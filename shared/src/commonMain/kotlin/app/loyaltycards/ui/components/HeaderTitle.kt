@@ -17,15 +17,18 @@ import kotlin.math.roundToInt
 /** Height shared by the header title block and the header buttons next to it. */
 internal val HeaderHeight: Dp = 48.dp
 
-private val TitleSize = 28.sp
+private val TitleSize = 32.sp
+private val SubtitleSize = 14.sp
+
+/** Space between the bottom of the title and the top of the subtitle's capitals. */
+private val TitleGap = 7.dp
 
 /** Cap height of DM Sans as a share of its font size. */
 private const val CapHeightRatio = 0.7f
 
 /**
- * Screen title with a small subtitle under it, exactly as tall as the header buttons:
- * the title's capital letters start at the buttons' top edge and the subtitle sits on
- * their bottom edge.
+ * Screen title with a small subtitle close under it, laid out in a block as tall as the
+ * header buttons and centered on them.
  */
 @Composable
 internal fun HeaderTitle(title: String, subtitle: String, modifier: Modifier = Modifier) {
@@ -40,7 +43,7 @@ internal fun HeaderTitle(title: String, subtitle: String, modifier: Modifier = M
             )
             Text(
                 text = subtitle,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = SubtitleSize),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
             )
@@ -53,8 +56,12 @@ internal fun HeaderTitle(title: String, subtitle: String, modifier: Modifier = M
         val width = constraints.constrainWidth(maxOf(titlePlaceable.width, subtitlePlaceable.width))
 
         // Place by baselines rather than boxes, so font padding doesn't shift the text.
-        val titleBaseline = (TitleSize.toPx() * CapHeightRatio).roundToInt()
-        val subtitleBaseline = height - 2.dp.roundToPx()
+        val titleCap = TitleSize.toPx() * CapHeightRatio
+        val subtitleCap = SubtitleSize.toPx() * CapHeightRatio
+        val blockHeight = titleCap + TitleGap.toPx() + subtitleCap
+        val top = (height - blockHeight) / 2f
+        val titleBaseline = (top + titleCap).roundToInt()
+        val subtitleBaseline = (top + blockHeight).roundToInt()
         layout(width, height) {
             titlePlaceable.place(0, titleBaseline - titlePlaceable[FirstBaseline])
             subtitlePlaceable.place(0, subtitleBaseline - subtitlePlaceable[FirstBaseline])
