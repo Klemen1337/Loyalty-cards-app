@@ -42,12 +42,15 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.loyaltycards.domain.LoyaltyCard
 import app.loyaltycards.ui.components.CardStrip
 import app.loyaltycards.ui.components.PillButton
 import app.loyaltycards.ui.components.PillStyle
+import app.loyaltycards.ui.preview.PreviewData
+import app.loyaltycards.ui.preview.PreviewTheme
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -55,6 +58,21 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 @Composable
 fun EditCardsScreen(viewModel: CardListViewModel, onDone: () -> Unit) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    EditCardsContent(
+        cards = uiState.cards,
+        onReorder = viewModel::reorder,
+        onRemove = viewModel::remove,
+        onDone = onDone,
+    )
+}
+
+@Composable
+internal fun EditCardsContent(
+    cards: List<LoyaltyCard>,
+    onReorder: (orderedIds: List<Long>) -> Unit,
+    onRemove: (LoyaltyCard) -> Unit,
+    onDone: () -> Unit,
+) {
     var pendingRemoval by remember { mutableStateOf<LoyaltyCard?>(null) }
 
     Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
@@ -66,7 +84,7 @@ fun EditCardsScreen(viewModel: CardListViewModel, onDone: () -> Unit) {
                 Column(Modifier.weight(1f)) {
                     Text("Edit cards", style = MaterialTheme.typography.displaySmall)
                     Text(
-                        text = cardCountLabel(uiState.cards.size),
+                        text = cardCountLabel(cards.size),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -74,8 +92,8 @@ fun EditCardsScreen(viewModel: CardListViewModel, onDone: () -> Unit) {
                 PillButton(text = "Done", onClick = onDone)
             }
             ReorderableCardList(
-                cards = uiState.cards,
-                onReorder = viewModel::reorder,
+                cards = cards,
+                onReorder = onReorder,
                 onRemoveClick = { pendingRemoval = it },
             )
         }
@@ -85,7 +103,7 @@ fun EditCardsScreen(viewModel: CardListViewModel, onDone: () -> Unit) {
         RemoveCardSheet(
             card = card,
             onConfirm = {
-                viewModel.remove(card)
+                onRemove(card)
                 pendingRemoval = null
             },
             onDismiss = { pendingRemoval = null },
@@ -181,7 +199,7 @@ private fun RemoveButton(cardName: String, onClick: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun RemoveCardSheet(card: LoyaltyCard, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+internal fun RemoveCardSheet(card: LoyaltyCard, onConfirm: () -> Unit, onDismiss: () -> Unit) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     fun hideThen(action: () -> Unit) {
@@ -223,4 +241,10 @@ private fun RemoveCardSheet(card: LoyaltyCard, onConfirm: () -> Unit, onDismiss:
             )
         }
     }
+}
+
+@Preview(name = "Edit cards", widthDp = 390, heightDp = 844)
+@Composable
+private fun EditCardsPreview() = PreviewTheme {
+    EditCardsContent(cards = PreviewData.cards, onReorder = {}, onRemove = {}, onDone = {})
 }

@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import app.loyaltycards.domain.LoyaltyCard
@@ -37,6 +38,8 @@ import app.loyaltycards.ui.components.BarcodePanel
 import app.loyaltycards.ui.components.CardDetails
 import app.loyaltycards.ui.components.CardHeader
 import app.loyaltycards.ui.components.cardContentColor
+import app.loyaltycards.ui.preview.PreviewData
+import app.loyaltycards.ui.preview.PreviewTheme
 import app.loyaltycards.ui.theme.EnlargedCardBackdrop
 
 /**
@@ -71,7 +74,7 @@ internal fun EnlargedCardDialog(card: LoyaltyCard, onDismiss: () -> Unit) {
 }
 
 @Composable
-private fun LandscapeCard(card: LoyaltyCard, onDismiss: () -> Unit, modifier: Modifier) {
+internal fun LandscapeCard(card: LoyaltyCard, onDismiss: () -> Unit, modifier: Modifier) {
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(28.dp),
@@ -108,4 +111,10 @@ private fun ClosePill(onClick: () -> Unit) {
             Text("Close", style = MaterialTheme.typography.labelLarge)
         }
     }
+}
+
+@Preview(name = "Enlarged card", widthDp = 760, heightDp = 360)
+@Composable
+private fun LandscapeCardPreview() = PreviewTheme {
+    LandscapeCard(card = PreviewData.ikea, onDismiss = {}, modifier = Modifier.fillMaxSize().padding(16.dp))
 }

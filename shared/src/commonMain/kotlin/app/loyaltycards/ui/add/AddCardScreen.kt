@@ -4,8 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +16,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -54,16 +54,40 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.loyaltycards.domain.Store
 import app.loyaltycards.ui.components.CircleIconButton
 import app.loyaltycards.ui.components.PillButton
+import app.loyaltycards.ui.preview.PreviewData
+import app.loyaltycards.ui.preview.PreviewTheme
 import kotlinx.coroutines.launch
 
 @Composable
 fun AddCardScreen(viewModel: AddCardViewModel, onBack: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    AddCardContent(
+        state = state,
+        onStoreQueryChange = viewModel::onStoreQueryChange,
+        onStoreSelected = viewModel::onStoreSelected,
+        onCardCodeChange = viewModel::onCardCodeChange,
+        onNameOnCardChange = viewModel::onNameOnCardChange,
+        onSave = { viewModel.save(onSaved = onBack) },
+        onBack = onBack,
+    )
+}
+
+@Composable
+internal fun AddCardContent(
+    state: AddCardFormState,
+    onStoreQueryChange: (String) -> Unit,
+    onStoreSelected: (Store) -> Unit,
+    onCardCodeChange: (String) -> Unit,
+    onNameOnCardChange: (String) -> Unit,
+    onSave: () -> Unit,
+    onBack: () -> Unit,
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -73,7 +97,7 @@ fun AddCardScreen(viewModel: AddCardViewModel, onBack: () -> Unit) {
         bottomBar = {
             PillButton(
                 text = "Add to wallet",
-                onClick = { viewModel.save(onSaved = onBack) },
+                onClick = onSave,
                 enabled = !state.isSaving,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -118,20 +142,20 @@ fun AddCardScreen(viewModel: AddCardViewModel, onBack: () -> Unit) {
             FieldLabel("Store")
             FormTextField(
                 value = state.storeQuery,
-                onValueChange = viewModel::onStoreQueryChange,
+                onValueChange = onStoreQueryChange,
                 placeholder = "Search, e.g. Lidl Plus",
                 error = state.storeError,
                 capitalization = KeyboardCapitalization.Words,
             )
             if (state.suggestions.isNotEmpty()) {
-                StoreSuggestions(state.suggestions, onSelect = viewModel::onStoreSelected)
+                StoreSuggestions(state.suggestions, onSelect = onStoreSelected)
             }
 
             Spacer(Modifier.height(18.dp))
             FieldLabel("Card code")
             FormTextField(
                 value = state.cardCode,
-                onValueChange = viewModel::onCardCodeChange,
+                onValueChange = onCardCodeChange,
                 placeholder = "Number under the barcode",
                 error = state.codeError,
                 keyboardType = KeyboardType.Ascii,
@@ -141,11 +165,11 @@ fun AddCardScreen(viewModel: AddCardViewModel, onBack: () -> Unit) {
             FieldLabel("Name on card", optional = true)
             FormTextField(
                 value = state.nameOnCard,
-                onValueChange = viewModel::onNameOnCardChange,
+                onValueChange = onNameOnCardChange,
                 placeholder = "As printed on the card",
                 capitalization = KeyboardCapitalization.Words,
                 imeAction = ImeAction.Done,
-                onDone = { viewModel.save(onSaved = onBack) },
+                onDone = onSave,
             )
             Spacer(Modifier.height(24.dp))
         }
@@ -329,4 +353,22 @@ private fun StoreSuggestions(stores: List<Store>, onSelect: (Store) -> Unit) {
             }
         }
     }
+}
+
+@Preview(name = "Add card", widthDp = 390, heightDp = 844)
+@Composable
+private fun AddCardPreview() = PreviewTheme {
+    AddCardContent(AddCardFormState(), {}, {}, {}, {}, onSave = {}, onBack = {})
+}
+
+@Preview(name = "Add card, store suggestions", widthDp = 390, heightDp = 844)
+@Composable
+private fun AddCardSuggestionsPreview() = PreviewTheme {
+    AddCardContent(AddCardFormState(storeQuery = "Li"), {}, {}, {}, {}, onSave = {}, onBack = {})
+}
+
+@Preview(name = "Add card, missing fields", widthDp = 390, heightDp = 844)
+@Composable
+private fun AddCardErrorsPreview() = PreviewTheme {
+    AddCardContent(AddCardFormState(showErrors = true), {}, {}, {}, {}, onSave = {}, onBack = {})
 }

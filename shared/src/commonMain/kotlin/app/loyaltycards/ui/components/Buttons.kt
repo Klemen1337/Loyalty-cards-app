@@ -1,10 +1,17 @@
 package app.loyaltycards.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -16,8 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.loyaltycards.ui.preview.PreviewData
+import app.loyaltycards.ui.preview.PreviewTheme
 
 enum class PillStyle { Filled, Outlined, Destructive }
 
@@ -83,5 +93,19 @@ internal fun CircleIconButton(
         Box(contentAlignment = Alignment.Center) {
             Icon(imageVector = icon, contentDescription = contentDescription)
         }
+    }
+}
+
+@Preview(name = "Buttons")
+@Composable
+private fun ButtonsPreview() = PreviewTheme {
+    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            PillButton(text = "Edit", onClick = {}, style = PillStyle.Outlined)
+            CircleIconButton(icon = Icons.Default.Search, contentDescription = "Search", onClick = {})
+            CircleIconButton(icon = Icons.Default.Add, contentDescription = "Add", onClick = {}, filled = true)
+        }
+        PillButton(text = "Add to wallet", onClick = {})
+        PillButton(text = "Remove card", onClick = {}, style = PillStyle.Destructive)
     }
 }

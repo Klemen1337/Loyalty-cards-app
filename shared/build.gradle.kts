@@ -36,6 +36,7 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.material.icons.core)
             implementation(libs.compose.components.resources)
+            implementation(libs.compose.ui.tooling.preview)
             implementation(libs.navigation.compose)
             implementation(libs.qrose.qr)
             implementation(libs.qrose.oned)
@@ -53,6 +54,11 @@ kotlin {
             implementation(libs.sqldelight.native.driver)
         }
     }
+}
+
+dependencies {
+    // Renders @Preview functions in Android Studio.
+    androidRuntimeClasspath(libs.compose.ui.tooling)
 }
 
 compose.resources {

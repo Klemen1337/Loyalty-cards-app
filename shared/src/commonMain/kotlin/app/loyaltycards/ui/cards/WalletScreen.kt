@@ -44,6 +44,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.loyaltycards.domain.LoyaltyCard
@@ -52,6 +53,8 @@ import app.loyaltycards.ui.components.PillButton
 import app.loyaltycards.ui.components.PillStyle
 import app.loyaltycards.ui.components.WalletCard
 import app.loyaltycards.ui.components.WalletCardDefaults
+import app.loyaltycards.ui.preview.PreviewData
+import app.loyaltycards.ui.preview.PreviewTheme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -61,7 +64,17 @@ fun WalletScreen(
     onEditCards: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var selectedId by rememberSaveable { mutableStateOf<Long?>(null) }
+    WalletContent(uiState = uiState, onAddCard = onAddCard, onEditCards = onEditCards)
+}
+
+@Composable
+internal fun WalletContent(
+    uiState: CardListUiState,
+    onAddCard: () -> Unit,
+    onEditCards: () -> Unit,
+    initialSelectedId: Long? = null,
+) {
+    var selectedId by rememberSaveable { mutableStateOf(initialSelectedId) }
     var enlargedId by rememberSaveable { mutableStateOf<Long?>(null) }
     var searching by rememberSaveable { mutableStateOf(false) }
     var query by rememberSaveable { mutableStateOf("") }
@@ -263,4 +276,33 @@ private fun EmptyMessage(title: String, body: String) {
             )
         }
     }
+}
+
+@Preview(name = "Wallet", widthDp = 390, heightDp = 844)
+@Composable
+private fun WalletPreview() = PreviewTheme {
+    WalletContent(CardListUiState(PreviewData.cards, isLoading = false), onAddCard = {}, onEditCards = {})
+}
+
+@Preview(name = "Wallet, card pulled out", widthDp = 390, heightDp = 844)
+@Composable
+private fun WalletSelectedPreview() = PreviewTheme {
+    WalletContent(
+        uiState = CardListUiState(PreviewData.cards, isLoading = false),
+        onAddCard = {},
+        onEditCards = {},
+        initialSelectedId = PreviewData.ikea.id,
+    )
+}
+
+@Preview(name = "Wallet, dark", widthDp = 390, heightDp = 844)
+@Composable
+private fun WalletDarkPreview() = PreviewTheme(darkTheme = true) {
+    WalletContent(CardListUiState(PreviewData.cards, isLoading = false), onAddCard = {}, onEditCards = {})
+}
+
+@Preview(name = "Wallet, empty", widthDp = 390, heightDp = 844)
+@Composable
+private fun WalletEmptyPreview() = PreviewTheme {
+    WalletContent(CardListUiState(emptyList(), isLoading = false), onAddCard = {}, onEditCards = {})
 }

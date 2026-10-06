@@ -30,12 +30,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.loyaltycards.domain.BarcodeFormat
 import app.loyaltycards.domain.LoyaltyCard
 import app.loyaltycards.domain.formatCardCode
+import app.loyaltycards.ui.preview.PreviewData
+import app.loyaltycards.ui.preview.PreviewTheme
 import io.github.alexzhirkevich.qrose.oned.BarcodePainter
 import io.github.alexzhirkevich.qrose.oned.BarcodeType
 import io.github.alexzhirkevich.qrose.oned.rememberBarcodePainter
@@ -249,5 +252,31 @@ internal fun CardStrip(card: LoyaltyCard, modifier: Modifier = Modifier, showCod
                 Text(card.mark, style = MaterialTheme.typography.titleMedium)
             }
         }
+    }
+}
+
+@Preview(name = "Wallet card")
+@Composable
+private fun WalletCardPreview() = PreviewTheme {
+    WalletCard(card = PreviewData.cards.first(), expanded = false, onClick = {}, modifier = Modifier.padding(16.dp))
+}
+
+@Preview(name = "Wallet card, expanded")
+@Composable
+private fun WalletCardExpandedPreview() = PreviewTheme {
+    WalletCard(card = PreviewData.ikea, expanded = true, onClick = {}, modifier = Modifier.padding(16.dp))
+}
+
+@Preview(name = "Wallet card, QR code")
+@Composable
+private fun WalletCardQrPreview() = PreviewTheme {
+    WalletCard(card = PreviewData.qrCard, expanded = true, onClick = {}, modifier = Modifier.padding(16.dp))
+}
+
+@Preview(name = "Card strip")
+@Composable
+private fun CardStripPreview() = PreviewTheme {
+    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        PreviewData.cards.take(3).forEach { CardStrip(it) }
     }
 }
