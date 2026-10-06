@@ -59,6 +59,8 @@ import app.loyaltycards.resources.remove_card_named
 import app.loyaltycards.resources.remove_card_question
 import app.loyaltycards.resources.reorder_hint
 import app.loyaltycards.ui.components.CardStrip
+import app.loyaltycards.ui.components.HeaderHeight
+import app.loyaltycards.ui.components.HeaderTitle
 import app.loyaltycards.ui.components.PillButton
 import app.loyaltycards.ui.components.PillStyle
 import app.loyaltycards.ui.preview.PreviewData
@@ -95,15 +97,16 @@ internal fun EditCardsContent(
                 modifier = Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Column(Modifier.weight(1f)) {
-                    Text(stringResource(Res.string.edit_cards_title), style = MaterialTheme.typography.displaySmall)
-                    Text(
-                        text = pluralStringResource(Res.plurals.card_count, cards.size, cards.size),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-                PillButton(text = stringResource(Res.string.done), onClick = onDone)
+                HeaderTitle(
+                    title = stringResource(Res.string.edit_cards_title),
+                    subtitle = pluralStringResource(Res.plurals.card_count, cards.size, cards.size),
+                    modifier = Modifier.weight(1f),
+                )
+                PillButton(
+                    text = stringResource(Res.string.done),
+                    onClick = onDone,
+                    modifier = Modifier.height(HeaderHeight),
+                )
             }
             ReorderableCardList(
                 cards = cards,

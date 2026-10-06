@@ -61,6 +61,8 @@ import app.loyaltycards.resources.no_match_title
 import app.loyaltycards.resources.search_cards
 import app.loyaltycards.resources.wallet_title
 import app.loyaltycards.ui.components.CircleIconButton
+import app.loyaltycards.ui.components.HeaderHeight
+import app.loyaltycards.ui.components.HeaderTitle
 import app.loyaltycards.ui.components.PillButton
 import app.loyaltycards.ui.components.PillStyle
 import app.loyaltycards.ui.components.WalletCard
@@ -171,19 +173,17 @@ private fun WalletHeader(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Column(Modifier.weight(1f)) {
-            Text(stringResource(Res.string.wallet_title), style = MaterialTheme.typography.displaySmall)
-            Text(
-                text = count?.let { pluralStringResource(Res.plurals.card_count, it, it) } ?: "",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
+        HeaderTitle(
+            title = stringResource(Res.string.wallet_title),
+            subtitle = count?.let { pluralStringResource(Res.plurals.card_count, it, it) } ?: "",
+            modifier = Modifier.weight(1f),
+        )
         PillButton(
             text = stringResource(Res.string.edit),
             onClick = onEdit,
             style = PillStyle.Outlined,
             enabled = (count ?: 0) > 0,
+            modifier = Modifier.height(HeaderHeight),
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
         )
         CircleIconButton(icon = Icons.Default.Search, contentDescription = stringResource(Res.string.search_cards), onClick = onSearch)
