@@ -1,3 +1,7 @@
 <resources>
-    <style name="Theme.LoyaltyCards" parent="android:Theme.Material.Light.NoActionBar" />
+    <color name="window_background">#F2F0EB</color>
+
+    <style name="Theme.LoyaltyCards" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
 </resources>

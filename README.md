@@ -10,11 +10,14 @@ shared/        Kotlin Multiplatform module: all UI, view models and storage
   commonMain/
     kotlin/app/loyaltycards/
       App.kt                 Root composable
-      domain/                LoyaltyCard, BarcodeFormat
+      domain/                LoyaltyCard, BarcodeFormat, StoreCatalog (known stores and colors)
       data/                  CardRepository + SQLDelight implementation
       di/AppContainer.kt     Manual dependency wiring
-      ui/cards/              Card list screen (view, drag to reorder, remove with undo)
-      ui/theme/              Material 3 theme (light + dark)
+      ui/cards/              Wallet (stacked cards, enlarged card) and edit mode (reorder, remove)
+      ui/add/                Add card (manual entry; the scan panel is a placeholder)
+      ui/components/         Card visuals, barcode drawing, buttons
+      ui/theme/              Theme from the design: colors, DM Sans type (light + dark)
+    composeResources/font/   DM Sans (SIL Open Font License, see licenses/)
     sqldelight/              Database schema and queries (seeds sample cards on first launch)
   androidMain/               Android SQLite driver
   iosMain/                   iOS SQLite driver + MainViewController entry point

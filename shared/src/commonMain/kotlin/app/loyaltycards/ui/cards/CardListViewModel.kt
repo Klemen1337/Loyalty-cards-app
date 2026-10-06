@@ -15,6 +15,7 @@ data class CardListUiState(
     val isLoading: Boolean = true,
 )
 
+/** Shared by the wallet and the edit screen. */
 class CardListViewModel(private val repository: CardRepository) : ViewModel() {
 
     val uiState: StateFlow<CardListUiState> = repository.observeCards()
@@ -28,8 +29,6 @@ class CardListViewModel(private val repository: CardRepository) : ViewModel() {
     fun remove(card: LoyaltyCard) {
         viewModelScope.launch { repository.delete(card.id) }
     }
-
-    fun undoRemove(card: LoyaltyCard) {
-        viewModelScope.launch { repository.restore(card) }
-    }
 }
+
+internal fun cardCountLabel(count: Int): String = if (count == 1) "1 card" else "$count cards"

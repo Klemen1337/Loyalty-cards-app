@@ -1,12 +1,15 @@
 CREATE TABLE loyalty_card (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    -- Key into app.loyaltycards.domain.StoreCatalog, null for stores the app doesn't know.
+    store_id TEXT,
     name TEXT NOT NULL,
     card_number TEXT NOT NULL,
     -- Barcode symbology name, see app.loyaltycards.domain.BarcodeFormat.
     barcode_format TEXT NOT NULL,
-    -- Brand color as ARGB.
+    -- Card color as ARGB.
     color INTEGER NOT NULL,
-    -- Sort order in the card list, ascending.
+    name_on_card TEXT,
+    -- Sort order in the wallet, ascending.
     position INTEGER NOT NULL,
     created_at INTEGER NOT NULL
 );
@@ -14,11 +17,14 @@ CREATE TABLE loyalty_card (
 CREATE INDEX loyalty_card_position ON loyalty_card(position);
 
 -- Sample cards, inserted only when the database is first created.
-INSERT INTO loyalty_card (name, card_number, barcode_format, color, position, created_at) VALUES
-    ('IKEA', '6275980123456789', 'CODE_128', 4278212771, 0, 0),
-    ('Spar', '2900000123458', 'EAN_13', 4278223933, 1, 0),
-    ('Mercator', '2800000456788', 'EAN_13', 4293068307, 2, 0),
-    ('Merkur', '7701234567', 'CODE_128', 4280107658, 3, 0);
+INSERT INTO loyalty_card (store_id, name, card_number, barcode_format, color, position, created_at) VALUES
+    ('mercator', 'Mercator Pika', '2400118352905', 'EAN_13', 4291301422, 0, 0),
+    ('spar', 'SPAR plus', '9120045716283', 'EAN_13', 4278939194, 1, 0),
+    ('dm', 'dm', '4066447208818', 'EAN_13', 4280367728, 2, 0),
+    ('ikea', 'IKEA Family', '6275980017342210', 'CODE_128', 4278212771, 3, 0),
+    ('lidl', 'Lidl Plus', '3820117640398', 'EAN_13', 4278210730, 4, 0),
+    ('hofer', 'Hofer', '2900008181641', 'EAN_13', 4280035925, 5, 0),
+    ('merkur', 'Merkur', '7701234567', 'CODE_128', 4280107658, 6, 0);
 
 selectAll:
 SELECT *
@@ -30,12 +36,11 @@ SELECT COALESCE(MAX(position) + 1, 0) AS next
 FROM loyalty_card;
 
 insert:
-INSERT INTO loyalty_card (name, card_number, barcode_format, color, position, created_at)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT INTO loyalty_card (store_id, name, card_number, barcode_format, color, name_on_card, position, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
-restore:
-INSERT OR REPLACE INTO loyalty_card (id, name, card_number, barcode_format, color, position, created_at)
-VALUES ?;
+lastInsertedId:
+SELECT last_insert_rowid();
 
 updatePosition:
 UPDATE loyalty_card
@@ -45,6 +50,3 @@ WHERE id = :id;
 deleteById:
 DELETE FROM loyalty_card
 WHERE id = :id;
-
-lastInsertedId:
-SELECT last_insert_rowid();

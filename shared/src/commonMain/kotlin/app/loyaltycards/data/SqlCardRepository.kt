@@ -30,17 +30,21 @@ class SqlCardRepository(
 
     @OptIn(ExperimentalTime::class)
     override suspend fun add(
+        storeId: String?,
         name: String,
         cardNumber: String,
         barcodeFormat: BarcodeFormat,
         colorArgb: Long,
+        nameOnCard: String?,
     ): Long = withContext(ioDispatcher) {
         queries.transactionWithResult {
             queries.insert(
+                store_id = storeId,
                 name = name,
                 card_number = cardNumber,
                 barcode_format = barcodeFormat.name,
                 color = colorArgb,
+                name_on_card = nameOnCard,
                 position = queries.nextPosition().executeAsOne(),
                 created_at = Clock.System.now().toEpochMilliseconds(),
             )
@@ -61,28 +65,16 @@ class SqlCardRepository(
     override suspend fun delete(id: Long) {
         withContext(ioDispatcher) { queries.deleteById(id) }
     }
-
-    override suspend fun restore(card: LoyaltyCard) {
-        withContext(ioDispatcher) { queries.restore(card.toRow()) }
-    }
 }
 
 private fun Loyalty_card.toDomain() = LoyaltyCard(
     id = id,
+    storeId = store_id,
     name = name,
     cardNumber = card_number,
     barcodeFormat = BarcodeFormat.fromName(barcode_format),
     colorArgb = color,
+    nameOnCard = name_on_card,
     position = position,
     createdAtMillis = created_at,
-)
-
-private fun LoyaltyCard.toRow() = Loyalty_card(
-    id = id,
-    name = name,
-    card_number = cardNumber,
-    barcode_format = barcodeFormat.name,
-    color = colorArgb,
-    position = position,
-    created_at = createdAtMillis,
 )

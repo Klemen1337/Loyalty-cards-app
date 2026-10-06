@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.sqldelight)
 }
 
@@ -11,6 +12,10 @@ kotlin {
         namespace = "app.loyaltycards.shared"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+
+        androidResources {
+            enable = true
+        }
     }
 
     listOf(
@@ -30,6 +35,10 @@ kotlin {
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
             implementation(libs.compose.material.icons.core)
+            implementation(libs.compose.components.resources)
+            implementation(libs.navigation.compose)
+            implementation(libs.qrose.qr)
+            implementation(libs.qrose.oned)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.kotlinx.coroutines.core)
@@ -44,6 +53,10 @@ kotlin {
             implementation(libs.sqldelight.native.driver)
         }
     }
+}
+
+compose.resources {
+    packageOfResClass = "app.loyaltycards.resources"
 }
 
 sqldelight {
