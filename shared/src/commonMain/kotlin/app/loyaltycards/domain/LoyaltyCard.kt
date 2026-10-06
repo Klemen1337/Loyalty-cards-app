@@ -13,10 +13,4 @@ data class LoyaltyCard(
     /** Sort order in the wallet, ascending. */
     val position: Long,
     val createdAtMillis: Long,
-) {
-    /** Short brand mark shown in the card's top-right corner, e.g. "IKEA" or "M". */
-    val mark: String
-        get() = StoreCatalog.byId(storeId)?.mark
-            ?: name.trim().firstOrNull()?.uppercase()
-            ?: "?"
-}
+)

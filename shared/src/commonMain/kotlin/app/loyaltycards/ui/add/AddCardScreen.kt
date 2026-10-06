@@ -395,7 +395,7 @@ private fun StoreSuggestions(stores: List<Store>, onSelect: (Store) -> Unit) {
     }
 }
 
-/** Small card in the store's color with its logo or initial. */
+/** Small card in the store's color, with its logo when there is one. */
 @Composable
 private fun StoreSwatch(store: Store) {
     val logo = brandLogo(store.id)
@@ -409,8 +409,6 @@ private fun StoreSwatch(store: Store) {
     ) {
         if (logo != null) {
             Icon(painterResource(logo), contentDescription = null, tint = contentColor, modifier = Modifier.size(20.dp))
-        } else {
-            Text(store.mark, style = MaterialTheme.typography.titleSmall, color = contentColor)
         }
     }
 }

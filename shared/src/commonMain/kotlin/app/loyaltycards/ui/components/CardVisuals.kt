@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -122,20 +121,16 @@ internal fun CardHeader(card: LoyaltyCard, modifier: Modifier = Modifier, traili
             modifier = Modifier.weight(1f),
         )
         Spacer(Modifier.width(12.dp))
-        BrandMark(card, style = MaterialTheme.typography.titleLarge, logoSize = 38.dp)
+        BrandMark(card, logoSize = 38.dp)
         trailing()
     }
 }
 
-/** The store's logo, tinted to the card's text color, or its initial when there's no logo. */
+/** The store's logo, tinted to the card's text color. Shows nothing when there's no logo. */
 @Composable
-internal fun BrandMark(card: LoyaltyCard, style: TextStyle, logoSize: Dp) {
-    val logo = brandLogo(card.storeId)
-    if (logo != null) {
-        Icon(painterResource(logo), contentDescription = null, modifier = Modifier.size(logoSize))
-    } else {
-        Text(text = card.mark, style = style, maxLines = 1)
-    }
+internal fun BrandMark(card: LoyaltyCard, logoSize: Dp) {
+    val logo = brandLogo(card.storeId) ?: return
+    Icon(painterResource(logo), contentDescription = null, modifier = Modifier.size(logoSize))
 }
 
 /** "NAME ON CARD" on the left (when set) and "CODE" on the right. */
@@ -286,7 +281,7 @@ internal fun CardStrip(card: LoyaltyCard, modifier: Modifier = Modifier, showCod
                     color = LocalContentColor.current.copy(alpha = 0.8f),
                 )
             } else {
-                BrandMark(card, style = MaterialTheme.typography.titleMedium, logoSize = 24.dp)
+                BrandMark(card, logoSize = 24.dp)
             }
         }
     }

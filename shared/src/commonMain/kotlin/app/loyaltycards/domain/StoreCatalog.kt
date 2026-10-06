@@ -10,10 +10,7 @@ data class Store(
     /** Brand color as ARGB, used as the card background. */
     val colorArgb: Long,
     val secondaryColorArgb: Long?,
-) {
-    /** Short text shown in the card's corner when there's no logo. */
-    val mark: String get() = name.first().uppercase()
-}
+)
 
 /**
  * Stores the app knows, used for suggestions, card colors and logos. The list is generated from
