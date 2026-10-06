@@ -41,7 +41,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,6 +67,8 @@ import app.loyaltycards.ui.components.WalletCard
 import app.loyaltycards.ui.components.WalletCardDefaults
 import app.loyaltycards.ui.preview.PreviewData
 import app.loyaltycards.ui.preview.PreviewTheme
+import kotlin.math.abs
+import kotlin.math.max
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -228,10 +232,17 @@ private fun CardStack(
     val listState = rememberLazyListState()
     ScrollSelectedIntoView(listState, cards, selectedId)
 
+    // Pulling past either end spreads the cards apart, and they spring back on release.
+    val stretch = rememberStretchOverscrollState()
+    val stretchDp = with(LocalDensity.current) { stretch.stretchPx.toDp() }
+    val extraGap = abs(stretchDp.value).dp * 0.9f / max(1, cards.lastIndex)
+    val extraTop = if (stretchDp > 0.dp) stretchDp * 0.1f else 0.dp
+
     LazyColumn(
         state = listState,
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 4.dp, bottom = 32.dp),
+        modifier = Modifier.fillMaxSize().nestedScroll(stretch.connection),
+        contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 4.dp + extraTop, bottom = 32.dp),
+        overscrollEffect = null,
     ) {
         itemsIndexed(cards, key = { _, card -> card.id }) { index, card ->
             val isSelected = card.id == selectedId
@@ -248,7 +259,8 @@ private fun CardStack(
 
             // The box is only as tall as the visible part; the card draws past it and the
             // next card covers the rest.
-            Box(Modifier.fillMaxWidth().padding(top = gap).height(visibleHeight)) {
+            val topSpacing = if (index > 0) gap + extraGap else gap
+            Box(Modifier.fillMaxWidth().padding(top = topSpacing).height(visibleHeight)) {
                 WalletCard(
                     card = card,
                     expanded = isSelected,
